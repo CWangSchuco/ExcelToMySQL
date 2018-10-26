@@ -1,12 +1,9 @@
-import pdb
 import MySQLdb
 import xlrd
 import numbers
-import decimal
 
 
-def doTheThing():
-    
+def do_the_thing():
     print("STARTING \n")
 
     print("ESTABLISHING MYSQL CONNECTION \n")
@@ -21,7 +18,15 @@ def doTheThing():
     cursor = database.cursor()
 
     # Create the INSERT INTO sql query
-    query = """INSERT INTO AcousticReport (TestNumber, ProductName, GlassLite1, GlassAirSpace, GlassLite2, TransmissionLoss50, TransmissionLoss63, TransmissionLoss80, TransmissionLoss100, TransmissionLoss125, TransmissionLoss160, TransmissionLoss200, TransmissionLoss250, TransmissionLoss315, TransmissionLoss400, TransmissionLoss500, TransmissionLoss630, TransmissionLoss800, TransmissionLoss1000, TransmissionLoss1250, TransmissionLoss1600, TransmissionLoss2000, TransmissionLoss2500, TransmissionLoss3150, TransmissionLoss4000, TransmissionLoss5000, TransmissionLoss6300, TransmissionLoss8000, TransmissionLoss10000) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
+    query = "INSERT INTO AcousticReport (TestNumber, ProductName, GlassLite1, GlassAirSpace, GlassLite2, " \
+            "TransmissionLoss50, TransmissionLoss63, TransmissionLoss80, TransmissionLoss100, " \
+            "TransmissionLoss125, TransmissionLoss160, TransmissionLoss200, TransmissionLoss250, " \
+            "TransmissionLoss315, TransmissionLoss400, TransmissionLoss500, TransmissionLoss630, " \
+            "TransmissionLoss800, TransmissionLoss1000, TransmissionLoss1250, TransmissionLoss1600, " \
+            "TransmissionLoss2000, TransmissionLoss2500, TransmissionLoss3150, TransmissionLoss4000, " \
+            "TransmissionLoss5000, TransmissionLoss6300, TransmissionLoss8000, TransmissionLoss10000) " \
+            "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s,%s, %s, %s, %s, %s, %s, " \
+            "%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
 
     print("GETTING EXCEL SHEET \n")
 
@@ -34,78 +39,78 @@ def doTheThing():
     # Create a For loop to iterate through each row in the XLS file, starting at row 2 to skip the headers
     for r in range(1, sheet.nrows):
 
-            print("PROCESSING ROW " + str(r) + " \n")
+        print("PROCESSING ROW " + str(r) + " \n")
 
-            TestNumber = sheet.cell(r, 0).value
-            ProductName = sheet.cell(r, 1).value
-            GlassLite1 = sheet.cell(r, 4).value
-            GlassAirSpace = sheet.cell(r, 5).value
-            GlassLite2 = sheet.cell(r, 6).value
+        test_number = sheet.cell(r, 0).value
+        product_name = sheet.cell(r, 1).value
+        glass_lite1 = sheet.cell(r, 4).value
+        glass_air_space = sheet.cell(r, 5).value
+        glass_lite2 = sheet.cell(r, 6).value
 
-            if(isinstance(sheet.cell(r, 7).value, numbers.Number)):
-                TransmissionLoss50 = sheet.cell(r, 7).value
-            else:
-                TransmissionLoss50 = None
+        if isinstance(sheet.cell(r, 7).value, numbers.Number):
+            transmission_loss50 = sheet.cell(r, 7).value
+        else:
+            transmission_loss50 = None
 
-            if (isinstance(sheet.cell(r, 8).value, numbers.Number)):
-                TransmissionLoss63 = sheet.cell(r, 8).value
-            else:
-                TransmissionLoss63 = None
+        if isinstance(sheet.cell(r, 8).value, numbers.Number):
+            transmission_loss63 = sheet.cell(r, 8).value
+        else:
+            transmission_loss63 = None
 
-            if (isinstance(sheet.cell(r, 9).value, numbers.Number)):
-                TransmissionLoss80 = sheet.cell(r, 9).value
-            else:
-                TransmissionLoss80 = None
+        if isinstance(sheet.cell(r, 9).value, numbers.Number):
+            transmission_loss80 = sheet.cell(r, 9).value
+        else:
+            transmission_loss80 = None
 
-            TransmissionLoss100 = sheet.cell(r, 10).value
-            TransmissionLoss125 = sheet.cell(r, 11).value
-            TransmissionLoss160 = sheet.cell(r, 12).value
-            TransmissionLoss200 = sheet.cell(r, 13).value
-            TransmissionLoss250 = sheet.cell(r, 14).value
-            TransmissionLoss315 = sheet.cell(r, 15).value
-            TransmissionLoss400 = sheet.cell(r, 16).value
-            TransmissionLoss500 = sheet.cell(r, 17).value
-            TransmissionLoss630 = sheet.cell(r, 18).value
-            TransmissionLoss800 = sheet.cell(r, 19).value
-            TransmissionLoss1000 = sheet.cell(r, 20).value
-            TransmissionLoss1250 = sheet.cell(r, 21).value
-            TransmissionLoss1600 = sheet.cell(r, 22).value
-            TransmissionLoss2000 = sheet.cell(r, 23).value
-            TransmissionLoss2500 = sheet.cell(r, 24).value
-            TransmissionLoss3150 = sheet.cell(r, 25).value
-            TransmissionLoss4000 = sheet.cell(r, 26).value
-            TransmissionLoss5000 = sheet.cell(r, 27).value
+        transmission_loss100 = sheet.cell(r, 10).value
+        transmission_loss125 = sheet.cell(r, 11).value
+        transmission_loss160 = sheet.cell(r, 12).value
+        transmission_loss200 = sheet.cell(r, 13).value
+        transmission_loss250 = sheet.cell(r, 14).value
+        transmission_loss315 = sheet.cell(r, 15).value
+        transmission_loss400 = sheet.cell(r, 16).value
+        transmission_loss500 = sheet.cell(r, 17).value
+        transmission_loss630 = sheet.cell(r, 18).value
+        transmission_loss800 = sheet.cell(r, 19).value
+        transmission_loss1000 = sheet.cell(r, 20).value
+        transmission_loss1250 = sheet.cell(r, 21).value
+        transmission_loss1600 = sheet.cell(r, 22).value
+        transmission_loss2000 = sheet.cell(r, 23).value
+        transmission_loss2500 = sheet.cell(r, 24).value
+        transmission_loss3150 = sheet.cell(r, 25).value
+        transmission_loss4000 = sheet.cell(r, 26).value
+        transmission_loss5000 = sheet.cell(r, 27).value
 
-            if(isinstance(sheet.cell(r, 28).value, numbers.Number)):
-                TransmissionLoss6300 = sheet.cell(r, 28).value
-            else:
-                TransmissionLoss6300 = None
+        if isinstance(sheet.cell(r, 28).value, numbers.Number):
+            transmission_loss6300 = sheet.cell(r, 28).value
+        else:
+            transmission_loss6300 = None
 
-            if (isinstance(sheet.cell(r, 29).value, numbers.Number)):
-                TransmissionLoss8000 = sheet.cell(r, 29).value
-            else:
-                TransmissionLoss8000 = None
+        if isinstance(sheet.cell(r, 29).value, numbers.Number):
+            transmission_loss8000 = sheet.cell(r, 29).value
+        else:
+            transmission_loss8000 = None
 
-            if (isinstance(sheet.cell(r, 30).value, numbers.Number)):
-                TransmissionLoss10000 = sheet.cell(r, 30).value
-            else:
-                TransmissionLoss10000 = None
+        if isinstance(sheet.cell(r, 30).value, numbers.Number):
+            transmission_loss10000 = sheet.cell(r, 30).value
+        else:
+            transmission_loss10000 = None
 
-            # Assign values from each row
-            values = (TestNumber, ProductName, GlassLite1, GlassAirSpace, GlassLite2, TransmissionLoss50,
-                        TransmissionLoss63, TransmissionLoss80, TransmissionLoss100, TransmissionLoss125,
-                        TransmissionLoss160, TransmissionLoss200, TransmissionLoss250,
-                        TransmissionLoss315, TransmissionLoss400, TransmissionLoss500, TransmissionLoss630,
-                        TransmissionLoss800, TransmissionLoss1000, TransmissionLoss1250, TransmissionLoss1600,
-                        TransmissionLoss2000, TransmissionLoss2500, TransmissionLoss3150, TransmissionLoss4000,
-                        TransmissionLoss5000, TransmissionLoss6300, TransmissionLoss8000, TransmissionLoss10000)
+        # Assign values from each row
+        values = (test_number, product_name, glass_lite1, glass_air_space, glass_lite2, transmission_loss50,
+                  transmission_loss63, transmission_loss80, transmission_loss100, transmission_loss125,
+                  transmission_loss160, transmission_loss200, transmission_loss250,
+                  transmission_loss315, transmission_loss400, transmission_loss500, transmission_loss630,
+                  transmission_loss800, transmission_loss1000, transmission_loss1250, transmission_loss1600,
+                  transmission_loss2000, transmission_loss2500, transmission_loss3150, transmission_loss4000,
+                  transmission_loss5000, transmission_loss6300, transmission_loss8000, transmission_loss10000)
 
-            print("ROW PROCESSED. INSERTING INTO DB \n")
+        print("ROW PROCESSED. INSERTING INTO DB \n")
 
-            # Execute sql Query
-            cursor.execute(query, values)
+        # Execute sql Query
+        cursor.execute(query, values)
 
-            print("INSERT COMPLETE \n")
+        print("INSERT COMPLETE \n")
 
     print("FINALIZING DB TRANSACTION")
 
@@ -129,7 +134,8 @@ def doTheThing():
 
 
 def main():
-    doTheThing()
+    do_the_thing()
+
 
 if __name__ == "__main__":
     main()
