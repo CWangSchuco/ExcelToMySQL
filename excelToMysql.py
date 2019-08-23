@@ -3,6 +3,7 @@ import xlrd
 import numbers
 
 
+
 def do_the_thing():
     print("STARTING \n")
 
@@ -18,21 +19,15 @@ def do_the_thing():
     cursor = database.cursor()
 
     # Create the INSERT INTO sql query
-    query = "INSERT INTO AcousticReport (FileName, ProductName, ProductCode, ProductType, OpeningType, GlassLite1, GlassAirSpaceOne, GlassLite2, " \
-            "GlassAirSpaceTwo, GlassLite3, TransmissionLoss50, TransmissionLoss63, TransmissionLoss80, TransmissionLoss100, " \
-            "TransmissionLoss125, TransmissionLoss160, TransmissionLoss200, TransmissionLoss250, " \
-            "TransmissionLoss315, TransmissionLoss400, TransmissionLoss500, TransmissionLoss630, " \
-            "TransmissionLoss800, TransmissionLoss1000, TransmissionLoss1250, TransmissionLoss1600, " \
-            "TransmissionLoss2000, TransmissionLoss2500, TransmissionLoss3150, TransmissionLoss4000, " \
-            "TransmissionLoss5000, TransmissionLoss6300, TransmissionLoss8000, TransmissionLoss10000) " \
-            "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s,%s, %s, %s, %s, %s, %s, " \
-            "%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+    query = "INSERT INTO Article (ArticleId, ArticleGuid, Name, Unit, ArticleTypeId, CrossSectionUrl, Description, InsideDimension, " \
+            "OutsideDimension, Dimension, RightSlideRebate, LeftSlideRebate" \
+            "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s"
 
     print("GETTING EXCEL SHEET \n")
 
     # Open the workbook and define the worksheet
     book = xlrd.open_workbook("data.xlsx")
-    sheet = book.sheet_by_name("Facade")
+    sheet = book.sheet_by_name("InwardOpening")
 
     print("PROCESSING EXCEL SHEET \n")
 
@@ -41,87 +36,81 @@ def do_the_thing():
 
         print("PROCESSING ROW " + str(r) + " \n")
 
-        file_name = sheet.cell(r, 0).value
-        product_name = sheet.cell(r, 1).value
-        product_code = sheet.cell(r, 2).value
-        product_type = sheet.cell(r, 3).value
+        profileName = sheet.cell(r,0).value
+        system = sheet.cell(r,1).value
+        type = sheet.cell(r,2).value
 
-        if sheet.cell(r, 4).value == "-" or sheet.cell(r, 4).value == "":
-            opening_type = None
+        if isinstance(sheet.cell(r, 3).value, numbers.Number):
+            depth = sheet.cell(r,3).value
         else:
-            opening_type = sheet.cell(r, 4).value
+            depth = None
 
-        glass_lite1 = sheet.cell(r, 6).value
-        glass_air_space_one = sheet.cell(r, 7).value
-        glass_lite2 = sheet.cell(r, 8).value
-
-        if sheet.cell(r, 9).value == '-' or sheet.cell(r, 9).value == '':
-            glass_air_space_two = None
+        if isinstance(sheet.cell(r, 4).value, numbers.Number):
+            insideWidth = sheet.cell(r,4).value
         else:
-            glass_air_space_two = sheet.cell(r, 9).value
+            insideWidth = None
 
-        if sheet.cell(r, 10).value == '-' or sheet.cell(r, 10).value == '':
-            glass_lite3 = None
+        if isinstance(sheet.cell(r, 5).value, numbers.Number):
+            outsideWidth = sheet.cell(r,5).value
         else:
-            glass_lite3 = sheet.cell(r, 10).value
+            outsideWidth = None
 
-        if isinstance(sheet.cell(r, 11).value, numbers.Number):
-            transmission_loss50 = sheet.cell(r, 11).value
+        if isinstance(sheet.cell(r, 6).value, numbers.Number):
+            offsetReference = sheet.cell(r,6).value
         else:
-            transmission_loss50 = None
+            offsetReference = None
 
-        if isinstance(sheet.cell(r, 12).value, numbers.Number):
-            transmission_loss63 = sheet.cell(r, 12).value
+        if isinstance(sheet.cell(r, 7).value, numbers.Number):
+            rightSideRebate = sheet.cell(r,7).value
         else:
-            transmission_loss63 = None
+            rightSideRebate = None
 
-        if isinstance(sheet.cell(r, 13).value, numbers.Number):
-            transmission_loss80 = sheet.cell(r, 13).value
+        if isinstance(sheet.cell(r, 8).value, numbers.Number):
+            leftSideRebate = sheet.cell(r,8).value
         else:
-            transmission_loss80 = None
+            leftSideRebate = None
 
-        transmission_loss100 = sheet.cell(r, 14).value
-        transmission_loss125 = sheet.cell(r, 15).value
-        transmission_loss160 = sheet.cell(r, 16).value
-        transmission_loss200 = sheet.cell(r, 17).value
-        transmission_loss250 = sheet.cell(r, 18).value
-        transmission_loss315 = sheet.cell(r, 19).value
-        transmission_loss400 = sheet.cell(r, 20).value
-        transmission_loss500 = sheet.cell(r, 21).value
-        transmission_loss630 = sheet.cell(r, 22).value
-        transmission_loss800 = sheet.cell(r, 23).value
-        transmission_loss1000 = sheet.cell(r, 24).value
-        transmission_loss1250 = sheet.cell(r, 25).value
-        transmission_loss1600 = sheet.cell(r, 26).value
-        transmission_loss2000 = sheet.cell(r, 27).value
-        transmission_loss2500 = sheet.cell(r, 28).value
-        transmission_loss3150 = sheet.cell(r, 29).value
-        transmission_loss4000 = sheet.cell(r, 30).value
-        transmission_loss5000 = sheet.cell(r, 31).value
+        ArticleId = r
+        ArticleGuid = None
+        Name = "article__" + profileName
+        Unit = "mm"
 
-        if isinstance(sheet.cell(r, 32).value, numbers.Number):
-            transmission_loss6300 = sheet.cell(r, 32).value
-        else:
-            transmission_loss6300 = None
+        if (type == "Outer Frame"):
+            ArticleTypeId = 1
+        elif(type == "Vent Frame"):
+            ArticleTypeId = 2
+        elif(type == "Glazing Bead"):
+            ArticleTypeId = 3
+        elif (type == "Glazing Gasket"):
+            ArticleTypeId = 4
+        elif (type == "Frame Foam"):
+            ArticleTypeId = 5
+        elif (type == "Vent Frame Gasket"):
+            ArticleTypeId = 6
+        elif (type == "Glazing Rebate Gasket"):
+            ArticleTypeId = 7
+        elif (type == "Vent Foam"):
+            ArticleTypeId = 8
+        elif (type == "Center Gasket"):
+            ArticleTypeId = 9
+        elif (type == "Mullion"):
+            ArticleTypeId = 10
+        elif (type == "Transom"):
+            ArticleTypeId = 11
+        elif (type == "Intermediate"):
+            ArticleTypeId = 12
 
-        if isinstance(sheet.cell(r, 33).value, numbers.Number):
-            transmission_loss8000 = sheet.cell(r, 33).value
-        else:
-            transmission_loss8000 = None
+        CrossSectionUrl = None
+        Description = type + ' ' + profileName
+        InsideDimension = insideWidth
+        OutsideDimension = outsideWidth
+        Dimension = None
+        RightSlideRebate = rightSideRebate
+        LeftSlideRebate = leftSideRebate
 
-        if isinstance(sheet.cell(r, 34).value, numbers.Number):
-            transmission_loss10000 = sheet.cell(r, 34).value
-        else:
-            transmission_loss10000 = None
 
         # Assign values from each row
-        values = (file_name, product_name, product_code, product_type, opening_type, glass_lite1, glass_air_space_one, glass_lite2, transmission_loss50,
-                  glass_air_space_two, glass_lite3, transmission_loss63, transmission_loss80, transmission_loss100, transmission_loss125,
-                  transmission_loss160, transmission_loss200, transmission_loss250,
-                  transmission_loss315, transmission_loss400, transmission_loss500, transmission_loss630,
-                  transmission_loss800, transmission_loss1000, transmission_loss1250, transmission_loss1600,
-                  transmission_loss2000, transmission_loss2500, transmission_loss3150, transmission_loss4000,
-                  transmission_loss5000, transmission_loss6300, transmission_loss8000, transmission_loss10000)
+        values = (ArticleId, ArticleGuid, Name, Unit, str(ArticleTypeId), CrossSectionUrl, Description, InsideDimension, OutsideDimension, Dimension, RightSlideRebate, LeftSlideRebate)
 
         print("ROW PROCESSED. INSERTING INTO DB \n")
 
